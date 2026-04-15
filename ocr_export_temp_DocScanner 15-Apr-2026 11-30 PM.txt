@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Exercise Tracker</title>
+  <style>
+    body {
+      font-family: Arial;
+      text-align: center;
+      background: #f4f4f4;
+    }
+    h1 {
+      color: #333;
+    }
+    .calendar {
+      display: grid;
+      grid-template-columns: repeat(7, 40px);
+      gap: 10px;
+      justify-content: center;
+      margin-top: 20px;
+    }
+    .day {
+      width: 40px;
+      height: 40px;
+      background: #ddd;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .active {
+      background: #4CAF50;
+      color: white;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>Exercise Tracker</h1>
+<p>Total days exercised: <span id="count">0</span></p>
+
+<div class="calendar" id="calendar"></div>
+
+<script>
+  const calendar = document.getElementById("calendar");
+  const countDisplay = document.getElementById("count");
+
+  let days = JSON.parse(localStorage.getItem("exerciseDays")) || {};
+
+  function renderCalendar() {
+    calendar.innerHTML = "";
+    for (let i = 1; i <= 30; i++) {
+      let day = document.createElement("div");
+      day.classList.add("day");
+      day.innerText = i;
+
+      if (days[i]) {
+        day.classList.add("active");
+      }
+
+      day.onclick = () => {
+        days[i] = !days[i];
+        localStorage.setItem("exerciseDays", JSON.stringify(days));
+        renderCalendar();
+        updateCount();
+      };
+
+      calendar.appendChild(day);
+    }
+  }
+
+  function updateCount() {
+    let count = Object.values(days).filter(v => v).length;
+    countDisplay.innerText = count;
+  }
+
+  renderCalendar();
+  updateCount();
+</script>
+
+</body>
+</html>
